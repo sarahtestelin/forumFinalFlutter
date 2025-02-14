@@ -1,26 +1,51 @@
 import 'package:flutter/material.dart';
-import 'messages_screen.dart'; // ✅ Import de l'écran des messages
-import 'authentification_choix.dart'; // ✅ Import de l'écran d'authentification
+import 'package:provider/provider.dart';
+import '../providers/auth_provider.dart';
+import 'login_screen.dart';
+import 'register_screen.dart';
+import 'messages_screen.dart'; // ✅ Import du fichier correctement
 
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+    bool isAuthenticated = authProvider.isAuthenticated;
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Forum"),
         backgroundColor: Colors.green,
         actions: [
-          // ✅ Bouton en haut à droite pour se connecter / s'inscrire
-          IconButton(
-            icon: Icon(Icons.person),
-            tooltip: "Se connecter / S'inscrire",
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AuthentificationChoix()),
-              );
-            },
-          ),
+          if (!isAuthenticated) ...[
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                );
+              },
+              child: Text("Se connecter", style: TextStyle(color: Colors.white)),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => RegisterScreen()),
+                );
+              },
+              child: Text("S'inscrire", style: TextStyle(color: Colors.white)),
+            ),
+          ] else ...[
+            TextButton(
+              onPressed: () {
+                authProvider.logout();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("Déconnecté avec succès")),
+                );
+              },
+              child: Text("Se déconnecter", style: TextStyle(color: Colors.white)),
+            ),
+          ]
         ],
       ),
       body: Center(
@@ -35,36 +60,19 @@ class HomeScreen extends StatelessWidget {
             ),
             SizedBox(height: 10),
             Text(
-              "Bienvenue sur mon application !",
+              "Discutez et échangez avec d'autres membres.",
               style: TextStyle(fontSize: 16, color: Colors.grey),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 20),
-            // ✅ Bouton pour voir les messages
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MessageScreen()),
+                  MaterialPageRoute(builder: (context) => MessageScreen()), // ✅ Utilisation correcte
                 );
               },
               child: Text("Voir les messages"),
-            ),
-            SizedBox(height: 10),
-            // ✅ Bouton pour se connecter / s'inscrire dans le corps de la page
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AuthentificationChoix()),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue, // Couleur différente pour le distinguer
-                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                textStyle: TextStyle(fontSize: 18),
-              ),
-              child: Text("Se connecter / S'inscrire"),
             ),
           ],
         ),

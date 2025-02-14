@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'providers/auth_provider.dart';
-import 'screens/splash_screen.dart';
 import 'screens/login_screen.dart';
-import 'screens/register_screen.dart';
 import 'screens/home_screen.dart';
+import 'screens/splash_screen.dart';
 
 void main() {
   runApp(
@@ -28,15 +27,11 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      debugShowCheckedModeBanner: false,
-      initialRoute: '/',
+      home: SplashScreen(), // ✅ L'appli démarre avec le SplashScreen
       routes: {
-        '/': (context) {
-          final authProvider = Provider.of<AuthProvider>(context);
-          return authProvider.isAuthenticated ? HomeScreen() : LoginScreen();
-        },
-        '/login': (context) => LoginScreen(),
-        '/register': (context) => RegisterScreen(),
+        '/home': (context) => HomeScreen(), // Accès libre au forum
+        '/login': (context) => LoginScreen(), // Connexion facultative
+
       },
     );
   }

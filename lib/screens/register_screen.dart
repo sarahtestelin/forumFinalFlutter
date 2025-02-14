@@ -22,7 +22,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     if (_passwordController.text != _confirmPasswordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Les mots de passe ne correspondent pas !")),
+        SnackBar(content: Text("❌ Les mots de passe ne correspondent pas !")),
       );
       return;
     }
@@ -39,17 +39,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Inscription réussie ! Connectez-vous.")),
+          SnackBar(content: Text("✅ Inscription réussie ! Connectez-vous.")),
         );
         Navigator.pushReplacementNamed(context, "/login");
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Erreur lors de l'inscription.")),
+          SnackBar(content: Text("⚠️ Erreur lors de l'inscription. Vérifiez vos informations.")),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Erreur : $e")),
+        SnackBar(content: Text("❌ Erreur : $e")),
       );
     } finally {
       setState(() => _isLoading = false);

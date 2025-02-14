@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
+import 'register_screen.dart'; // ✅ Import de RegisterScreen
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -19,27 +20,22 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => _isLoading = true);
 
     try {
-      print("📡 Tentative de connexion avec : ${_emailController.text}");
-
       bool success = await Provider.of<AuthProvider>(context, listen: false)
           .login(_emailController.text, _passwordController.text);
 
       if (success) {
-        print("✅ Connexion réussie !");
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Connexion réussie !')),
+          SnackBar(content: Text('✅ Connexion réussie !')),
         );
-        Navigator.pushReplacementNamed(context, '/');
+        Navigator.pop(context); // ✅ Retourne à l'écran précédent
       } else {
-        print("❌ Échec de connexion !");
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Erreur lors de la connexion.")),
+          SnackBar(content: Text("⚠️ Erreur lors de la connexion.")),
         );
       }
     } catch (e) {
-      print("❌ Erreur API : $e");
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erreur : $e')),
+        SnackBar(content: Text("❌ Erreur : $e")),
       );
     } finally {
       setState(() => _isLoading = false);
@@ -55,20 +51,13 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Form(
           key: _formKey,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "Connectez-vous pour accéder au forum",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 20),
               TextFormField(
                 controller: _emailController,
                 decoration: InputDecoration(labelText: "Email"),
                 validator: (value) =>
                 value!.isEmpty ? "Entrez votre email" : null,
               ),
-              SizedBox(height: 10),
               TextFormField(
                 controller: _passwordController,
                 decoration: InputDecoration(labelText: "Mot de passe"),
@@ -78,21 +67,20 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               SizedBox(height: 20),
               _isLoading
-                  ? Center(child: CircularProgressIndicator())
-                  : Center(
-                child: ElevatedButton(
-                  onPressed: _login,
-                  child: Text("Se connecter"),
-                ),
+                  ? CircularProgressIndicator()
+                  : ElevatedButton(
+                onPressed: _login,
+                child: Text("Se connecter"),
               ),
               SizedBox(height: 10),
-              Center(
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/register');
-                  },
-                  child: Text("Pas encore inscrit ? S'inscrire"),
-                ),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => RegisterScreen()), // ✅ Redirection vers RegisterScreen
+                  );
+                },
+                child: Text("Créer un compte"),
               ),
             ],
           ),
