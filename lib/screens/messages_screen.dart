@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 import '../models/message.dart';
-
+import 'message_detail_screen.dart';
 
 class MessageScreen extends StatefulWidget {
   @override
@@ -10,7 +10,7 @@ class MessageScreen extends StatefulWidget {
 
 class _MessageScreenState extends State<MessageScreen> {
   late Future<List<Message>> futureMessages;
-  bool isDescending = true; // par défaut tri du plus récent au plus ancien
+  bool isDescending = true; // Tri par défaut du plus récent au plus ancien
 
   @override
   void initState() {
@@ -18,12 +18,11 @@ class _MessageScreenState extends State<MessageScreen> {
     futureMessages = ApiService().fetchMessages();
   }
 
-  /// Fonction pour trier la liste des messages
+  /// Fonction pour trier les messages
   List<Message> sortMessages(List<Message> messages) {
     messages.sort((a, b) => isDescending
-        ? b.datePoste.compareTo(a.datePoste)  // Du plus récent au plus ancien
-        : a.datePoste.compareTo(b.datePoste)  // Du plus ancien au plus récent
-    );
+        ? b.datePoste.compareTo(a.datePoste)
+        : a.datePoste.compareTo(b.datePoste));
     return messages;
   }
 
@@ -34,7 +33,6 @@ class _MessageScreenState extends State<MessageScreen> {
         title: Text("Messages"),
         backgroundColor: Colors.green,
         actions: [
-          // menu déroulant pour choisir le tri
           DropdownButton<bool>(
             value: isDescending,
             icon: Icon(Icons.sort, color: Colors.white),
@@ -70,7 +68,6 @@ class _MessageScreenState extends State<MessageScreen> {
             return Center(child: Text("Aucun message disponible"));
           }
 
-          // appliquer le tri sur la liste des messages
           List<Message> messages = sortMessages(snapshot.data!);
 
           return ListView.builder(
@@ -95,6 +92,14 @@ class _MessageScreenState extends State<MessageScreen> {
                       ),
                     ],
                   ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MessageDetailScreen(message: message),
+                      ),
+                    );
+                  },
                 ),
               );
             },

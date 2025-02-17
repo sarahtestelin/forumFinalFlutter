@@ -46,4 +46,23 @@ class SecureStorage {
     await _storage.delete(key: _keyPassword, iOptions: _secureOptions, aOptions: _androidOptions);
     await _storage.delete(key: _keyToken, iOptions: _secureOptions, aOptions: _androidOptions);
   }
+
+  // 🔑 Clé pour l'ID utilisateur
+  static const String _keyUserId = 'user_id';
+
+  /// 🔹 Sauvegarde de l'ID utilisateur
+  Future<void> saveUserId(String userId) async {
+    await _storage.write(key: _keyUserId, value: userId, iOptions: _secureOptions, aOptions: _androidOptions);
+  }
+
+  /// 🔹 Récupération de l'ID utilisateur
+  Future<String?> readUserId() async {
+    return await _storage.read(key: _keyUserId, iOptions: _secureOptions, aOptions: _androidOptions);
+  }
+
+  /// 🔹 Suppression de l'ID utilisateur (déconnexion)
+  Future<void> deleteUserId() async {
+    await _storage.delete(key: _keyUserId, iOptions: _secureOptions, aOptions: _androidOptions);
+  }
+
 }
