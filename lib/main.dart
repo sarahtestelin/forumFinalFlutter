@@ -9,7 +9,9 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => AuthProvider()..loadToken()),
+        ChangeNotifierProvider(
+          create: (context) => AuthProvider()..loadToken(),
+        ),
       ],
       child: MyApp(),
     ),
@@ -31,7 +33,6 @@ class MyApp extends StatelessWidget {
       routes: {
         '/home': (context) => HomeScreen(), // Accès libre au forum
         '/login': (context) => LoginScreen(), // Connexion facultative
-
       },
     );
   }
