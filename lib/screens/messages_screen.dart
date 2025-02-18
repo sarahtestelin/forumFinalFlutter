@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../services/api_service.dart';
 import '../models/message.dart';
 import 'message_detail_screen.dart';
+import '../providers/auth_provider.dart';
 
 class MessageScreen extends StatefulWidget {
   @override
@@ -10,7 +12,7 @@ class MessageScreen extends StatefulWidget {
 
 class _MessageScreenState extends State<MessageScreen> {
   late Future<List<Message>> futureMessages;
-  bool isDescending = true; // Tri par défaut du plus récent au plus ancien
+  bool isDescending = true;
 
   @override
   void initState() {
@@ -18,7 +20,6 @@ class _MessageScreenState extends State<MessageScreen> {
     futureMessages = ApiService().fetchMessages();
   }
 
-  /// Fonction pour trier les messages
   List<Message> sortMessages(List<Message> messages) {
     messages.sort((a, b) => isDescending
         ? b.datePoste.compareTo(a.datePoste)
@@ -29,34 +30,7 @@ class _MessageScreenState extends State<MessageScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Messages"),
-        backgroundColor: Colors.green,
-        actions: [
-          DropdownButton<bool>(
-            value: isDescending,
-            icon: Icon(Icons.sort, color: Colors.white),
-            dropdownColor: Colors.green[200],
-            onChanged: (bool? newValue) {
-              if (newValue != null) {
-                setState(() {
-                  isDescending = newValue;
-                });
-              }
-            },
-            items: [
-              DropdownMenuItem(
-                value: true,
-                child: Text("Plus récent → Plus ancien"),
-              ),
-              DropdownMenuItem(
-                value: false,
-                child: Text("Plus ancien → Plus récent"),
-              ),
-            ],
-          ),
-        ],
-      ),
+      appBar: AppBar(title: Text("Messages")),
       body: FutureBuilder<List<Message>>(
         future: futureMessages,
         builder: (context, snapshot) {
@@ -75,31 +49,19 @@ class _MessageScreenState extends State<MessageScreen> {
             itemBuilder: (context, index) {
               Message message = messages[index];
               return Card(
-                margin: EdgeInsets.all(8.0),
                 child: ListTile(
-                  title: Text(
-                    message.titre,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(message.contenu),
-                      SizedBox(height: 5),
-                      Text(
-                        "Posté par ${message.author} - ${message.datePoste.toLocal()}",
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
-                      ),
-                    ],
-                  ),
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => MessageDetailScreen(message: message),
+                        builder: (context) => MessageDetailScreen(
+                          message: message, // ✅ Supprimé `token`
+                        ),
                       ),
                     );
                   },
+                  title: Text(message.titre, style: TextStyle(fontWeight: FontWeight.bold)),
+                  subtitle: Text(message.contenu),
                 ),
               );
             },

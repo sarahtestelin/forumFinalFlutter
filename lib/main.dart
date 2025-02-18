@@ -10,7 +10,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => AuthProvider()..loadToken(),
+          create: (context) => AuthProvider()..loadSession(), // ✅ Charge le token ET le profil utilisateur
         ),
       ],
       child: MyApp(),

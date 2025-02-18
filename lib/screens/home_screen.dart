@@ -3,13 +3,14 @@ import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import 'login_screen.dart';
 import 'register_screen.dart';
-import 'messages_screen.dart'; // ✅ Import du fichier correctement
+import 'messages_screen.dart'; // ✅ Import correct
 
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     bool isAuthenticated = authProvider.isAuthenticated;
+    final user = authProvider.user; // Récupère les infos utilisateur
 
     return Scaffold(
       appBar: AppBar(
@@ -36,6 +37,13 @@ class HomeScreen extends StatelessWidget {
               child: Text("S'inscrire", style: TextStyle(color: Colors.white)),
             ),
           ] else ...[
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: Text(
+                "Bonjour, ${user?['prenom']} ${user?['nom']} 👋",
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+            ),
             TextButton(
               onPressed: () {
                 authProvider.logout();
@@ -54,6 +62,15 @@ class HomeScreen extends StatelessWidget {
           children: [
             Icon(Icons.forum, size: 100, color: Colors.green),
             SizedBox(height: 20),
+
+            // ✅ Affiche "Bonjour + Prénom Nom" si l'utilisateur est connecté
+            if (isAuthenticated)
+              Text(
+                "Bonjour, ${user?['prenom']} ${user?['nom']} 👋",
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.green),
+                textAlign: TextAlign.center,
+              ),
+
             Text(
               "Bienvenue sur le forum !",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),

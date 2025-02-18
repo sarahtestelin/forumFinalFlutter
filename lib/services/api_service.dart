@@ -66,32 +66,41 @@ class ApiService {
     }
   }
 
-  /// 🔹 Envoyer un message ou une réponse
   Future<void> sendMessage(String message, {int? parentId}) async {
     try {
-      String? userId = await secureStorage.readUserId();
+      String? token = await secureStorage.readToken();
+      if (token == null) throw Exception("Utilisateur non authentifié.");
 
-      if (userId == null) {
-        throw Exception("Utilisateur non connecté !");
-      }
+      String? userId = await secureStorage.readUserId();
+      if (userId == null) throw Exception("Utilisateur non connecté !");
 
       final headers = {
-        'Accept': 'application/ld+json',
-        'Content-Type': 'application/json',
+        'Accept': 'application/ld+json', // ✅ Correction du Content-Type
+        'Content-Type': 'application/ld+json', // ✅ Correction du Content-Type
+        'Authorization': 'Bearer $token',
       };
 
+      // 🔹 URIs relatives demandées par l'API
+      String userUri = "/forumFinal/api/users/$userId";
+      String? parentUri = parentId != null ? "/forumFinal/api/messages/$parentId" : null;
+
+      // ✅ JSON conforme au cURL
       final body = jsonEncode({
+        "titre": "Réponse",
+        "datePoste": DateTime.now().toIso8601String(), // ✅ Ajout de la date
         "contenu": message,
-        "userId": userId,
-        if (parentId != null) "parent": "/forumFinal/api/messages/$parentId", // ✅ Correction du format de parentId
+        "user": userUri, // ✅ URI relative
+        if (parentUri != null) "parent": parentUri, // ✅ URI relative
       });
+
+      print("📤 Envoi de la requête : $body");
 
       final response = await http.post(Uri.parse(baseUrl), headers: headers, body: body);
 
-      print("🔹 Réponse API sendMessage : ${response.body}");
+      print("🔹 Réponse API sendMessage : ${response.statusCode} - ${response.body}");
 
       if (response.statusCode != 201) {
-        throw Exception("❌ Erreur lors de l'envoi du message (${response.statusCode})");
+        throw Exception("❌ Erreur lors de l'envoi du message (${response.statusCode}) : ${response.body}");
       }
 
       print("✅ Message envoyé avec succès !");
