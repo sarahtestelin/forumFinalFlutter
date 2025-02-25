@@ -7,7 +7,7 @@ class ApiService {
   static const String baseUrl = "https://s3-4684.nuage-peda.fr/forumFinal/api/messages";
   final SecureStorage secureStorage = SecureStorage();
 
-  /// 🔹 Récupérer tous les messages
+  /// récupérer tous les messages
   Future<List<Message>> fetchMessages() async {
     try {
       final headers = {

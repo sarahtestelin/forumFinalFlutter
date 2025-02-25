@@ -1,0 +1,2 @@
+/Users/sarahtestelin/StudioProjects/forumFinal/android/app/.cxx/Debug/j1j6v6f6/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/sarahtestelin/StudioProjects/forumFinal/android/app/.cxx/Debug/j1j6v6f6/armeabi-v7a/CMakeFiles/rebuild_cache.dir
