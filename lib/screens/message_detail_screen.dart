@@ -20,7 +20,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
   @override
   void initState() {
     super.initState();
-    futureReplies = ApiService().fetchReplies(widget.message.id);
+    futureReplies = ApiService().fetchReplies(widget.message.id);  // Récupère les réponses à ce message
   }
 
   /// Envoie une réponse au message principal
@@ -42,7 +42,7 @@ class _MessageDetailScreenState extends State<MessageDetailScreen> {
 
     // Rafraîchissement de la liste des réponses
     setState(() {
-      futureReplies = ApiService().fetchReplies(widget.message.id);
+      futureReplies = ApiService().fetchReplies(widget.message.id);  // Recharger les réponses
     });
 
     replyController.clear();
