@@ -129,4 +129,28 @@ class ApiService {
       throw Exception("Erreur réseau : ${e.toString()}");
     }
   }
+  /// Récupérer les informations d'un utilisateur en utilisant son userId
+  Future<Map<String, dynamic>> fetchUserProfile(String userId) async {
+    try {
+      final headers = {
+        'Accept': 'application/ld+json',
+        'Content-Type': 'application/json',
+      };
+
+      final response = await http.get(Uri.parse('$baseUrl/users/$userId'), headers: headers);
+
+      print("🔹 Status Code: ${response.statusCode}");
+      print("🔹 Réponse brute: ${response.body}");
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+        return jsonResponse;
+      } else {
+        throw Exception("Erreur lors de la récupération du profil utilisateur (${response.statusCode})");
+      }
+    } catch (e) {
+      print("❌ Exception fetchUserProfile: $e");
+      throw Exception("Erreur réseau : ${e.toString()}");
+    }
+  }
 }

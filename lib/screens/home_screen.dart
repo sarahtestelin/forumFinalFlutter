@@ -3,19 +3,19 @@ import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import 'login_screen.dart';
 import 'register_screen.dart';
-import 'messages_screen.dart'; // ✅ Import correct
+import 'messages_screen.dart';
+import 'profile_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     bool isAuthenticated = authProvider.isAuthenticated;
-    final user = authProvider.user; // Récupère les infos utilisateur
+    final user = authProvider.user; // permet de récupèrer les infos utilisateur
 
     return Scaffold(
       appBar: AppBar(
         title: Text("Forum"),
-        backgroundColor: Colors.green,
         actions: [
           if (!isAuthenticated) ...[
             TextButton(
@@ -40,7 +40,7 @@ class HomeScreen extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: Text(
-                "Bonjour, ${user?['prenom']} ${user?['nom']} 👋",
+                "${user?['prenom']} ${user?['nom']}",
                 style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
               ),
             ),
@@ -60,14 +60,14 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.forum, size: 100, color: Colors.green),
+            Icon(Icons.forum, size: 100, color: Colors.indigoAccent),
             SizedBox(height: 20),
 
-            // ✅ Affiche "Bonjour + Prénom Nom" si l'utilisateur est connecté
+            // affiche "Bonjour + Prénom Nom" si l'utilisateur est connecté
             if (isAuthenticated)
               Text(
                 "Bonjour, ${user?['prenom']} ${user?['nom']} 👋",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.green),
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.indigoAccent),
                 textAlign: TextAlign.center,
               ),
 
@@ -77,7 +77,7 @@ class HomeScreen extends StatelessWidget {
             ),
             SizedBox(height: 10),
             Text(
-              "Discutez et échangez avec d'autres membres.",
+              "Ton forum communautaire préféré !",
               style: TextStyle(fontSize: 16, color: Colors.grey),
               textAlign: TextAlign.center,
             ),
@@ -86,11 +86,35 @@ class HomeScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MessageScreen()), // ✅ Utilisation correcte
+                  MaterialPageRoute(builder: (context) => MessageScreen()),
                 );
               },
               child: Text("Voir les messages"),
             ),
+            SizedBox(height: 20),
+
+            // bouton "Voir mon profil" si l'utilisateur est connecté
+            if (isAuthenticated)
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ProfileScreen()),
+                  );
+                },
+                child: Text("Voir mon profil", style: TextStyle(color: Colors.blue)),
+              ),
+            // si l'utilisateur n'est pas connecté ca affiche un bouton pour se connecter
+            if (!isAuthenticated)
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                  );
+                },
+                child: Text("Se connecter pour accéder au profil", style: TextStyle(color: Colors.blue)),
+              ),
           ],
         ),
       ),

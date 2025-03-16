@@ -4,13 +4,18 @@ import 'providers/auth_provider.dart';
 import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/splash_screen.dart';
+import 'screens/authentification_choix.dart';
+import 'screens/message_detail_screen.dart';
+import 'screens/messages_screen.dart';
+import 'screens/profile_screen.dart';
+import 'screens/register_screen.dart';
 
 void main() {
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => AuthProvider()..loadSession(), // ✅ Charge le token ET le profil utilisateur
+          create: (context) => AuthProvider()..loadSession(), // charge le token et le profil utilisateur
         ),
       ],
       child: MyApp(),
@@ -26,13 +31,18 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Forum',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        useMaterial3: true,
+        // Thème principal bleu pour l'ensemble de l'application
+        primaryColor: Colors.blue,  // Couleur principale de l'AppBar
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),  // Utilisation de bleu comme base
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.blue,  // AppBar en bleu
+        ),
+        useMaterial3: true,  // Activer Material 3
       ),
-      home: SplashScreen(), // ✅ L'appli démarre avec le SplashScreen
+      home: SplashScreen(),
       routes: {
-        '/home': (context) => HomeScreen(), // Accès libre au forum
-        '/login': (context) => LoginScreen(), // Connexion facultative
+        '/home': (context) => HomeScreen(),
+        '/login': (context) => LoginScreen(),
       },
     );
   }
